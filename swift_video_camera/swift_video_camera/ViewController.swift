@@ -1,28 +1,14 @@
-//
-//  ViewController.swift
-//  swift_video_camera
-//
-//  Created by kt on 3/12/17.
-//  Copyright © 2017 kt. All rights reserved.
-//
-
 import UIKit
 import AVFoundation
 
 class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
-    // ビデオのアウトプット.
     private var myVideoOutput: AVCaptureMovieFileOutput!
-    
-    // スタートボタン.
     private var myButtonStart: UIButton!
-    
-    // ストップボタン.
     private var myButtonStop: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         // セッションの作成.
         let mySession = AVCaptureSession()
@@ -95,41 +81,28 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         myButtonStart.layer.position = CGPoint(x: self.view.bounds.width/2 - 70, y:self.view.bounds.height-50)
         myButtonStop.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height-50)
         
-        myButtonStart.addTarget(self, action: #selector(ViewController.onClickMyButton), for: .touchUpInside)
-        myButtonStop.addTarget(self, action: #selector(ViewController.onClickMyButton), for: .touchUpInside)
+        myButtonStart.addTarget(self, action: #selector(ViewController.onClickStartRecording), for: .touchUpInside)
+        myButtonStop.addTarget(self, action: #selector(ViewController.onClickStopRecording), for: .touchUpInside)
         
         // UIボタンをViewに追加.
         self.view.addSubview(myButtonStart)
         self.view.addSubview(myButtonStop)
     }
     
-    /*
-     ボタンイベント.
-     */
-    internal func onClickMyButton(sender: UIButton){
-        
-        if( sender == myButtonStart ){
-            print("撮影開始")
-            let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-            
-            // フォルダ.
-            let documentsDirectory = paths[0]
-            
-            // ファイル名.
-            let filePath = "\(documentsDirectory)/test.mp4"
-            
-            // URL.
-            let fileURL = URL(fileURLWithPath: filePath)
-            
-            // 録画開始.
-            myVideoOutput.startRecording(toOutputFileURL: fileURL, recordingDelegate: self)
-            
-        }else if ( sender == myButtonStop ){
-            print("撮影停止")
-            myVideoOutput.stopRecording()
-        }
+    func onClickStartRecording(){
+        print("撮影開始")
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        let filePath = "\(documentsDirectory)/test.mp4"
+        let fileURL = URL(fileURLWithPath: filePath)
+        myVideoOutput.startRecording(toOutputFileURL: fileURL, recordingDelegate: self)
     }
-
+    
+    func onClickStopRecording(){
+        print("撮影停止")
+        myVideoOutput.stopRecording()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -137,12 +110,17 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     
     // レコード開始時
-    private func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [AnyObject]!) {
+    private func capture(_ captureOutput: AVCaptureFileOutput!,
+                         didStartRecordingToOutputFileAt fileURL: URL!,
+                         fromConnections connections: [AnyObject]!) {
         print("レコード開始時")
     }
 
     // レコード終了時
-    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
+    func capture(_ captureOutput: AVCaptureFileOutput!,
+                 didFinishRecordingToOutputFileAt outputFileURL: URL!,
+                 fromConnections connections: [Any]!,
+                 error: Error!) {
         print("レコード終了時")
     }
 }
