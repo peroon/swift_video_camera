@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6829C83A1E7C2B5A00A3284E /* mona_lisa_frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 6829C8391E7C2B5A00A3284E /* mona_lisa_frame.png */; };
 		685F9BF01E757709009EBDC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685F9BEF1E757709009EBDC9 /* AppDelegate.swift */; };
 		685F9BF21E757709009EBDC9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685F9BF11E757709009EBDC9 /* ViewController.swift */; };
 		685F9BF51E75770A009EBDC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 685F9BF31E75770A009EBDC9 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6829C8391E7C2B5A00A3284E /* mona_lisa_frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mona_lisa_frame.png; sourceTree = "<group>"; };
 		685F9BEC1E757709009EBDC9 /* swift_video_camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = swift_video_camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		685F9BEF1E757709009EBDC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		685F9BF11E757709009EBDC9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +56,7 @@
 		685F9BEE1E757709009EBDC9 /* swift_video_camera */ = {
 			isa = PBXGroup;
 			children = (
+				6829C8391E7C2B5A00A3284E /* mona_lisa_frame.png */,
 				685F9BEF1E757709009EBDC9 /* AppDelegate.swift */,
 				685F9BF11E757709009EBDC9 /* ViewController.swift */,
 				685F9BF31E75770A009EBDC9 /* Main.storyboard */,
@@ -127,6 +130,7 @@
 				685F9BFA1E75770A009EBDC9 /* LaunchScreen.storyboard in Resources */,
 				685F9BF71E75770A009EBDC9 /* Assets.xcassets in Resources */,
 				685F9BF51E75770A009EBDC9 /* Main.storyboard in Resources */,
+				6829C83A1E7C2B5A00A3284E /* mona_lisa_frame.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

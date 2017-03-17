@@ -53,11 +53,27 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             // セッション開始.
             captureSession.startRunning()
             
+            self.addArtFrame()
             self.addButtons()
 
         }catch{
             print(error)
         }
+    }
+    
+    func addArtFrame(){
+        let image:UIImage = UIImage(named:"mona_lisa_frame.png")!
+        let imageView = UIImageView(image:image)
+        
+        // size
+        let screenWidth:CGFloat = view.frame.size.width
+        let screenHeight:CGFloat = view.frame.size.height
+        
+        // position
+        imageView.center = CGPoint(x:screenWidth/2, y:screenHeight/2)
+        
+        // add
+        self.view.addSubview(imageView)
     }
     
     func addButtons(){
