@@ -32,29 +32,38 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
             captureSession.startRunning()
             
+            self.addUI()
             self.addArtFrame()
-            self.addButtons()
         }catch{
             print(error)
         }
     }
     
-    func addArtFrame(){
-        let image:UIImage = UIImage(named:"mona_lisa_frame.png")!
-        let imageView = UIImageView(image:image)
-        
-        // size
-        let screenWidth:CGFloat = view.frame.size.width
-        let screenHeight:CGFloat = view.frame.size.height
+    func addUI(){
+        // board
+        let W = self.view.frame.size.width
+        let H = self.view.frame.size.height
+        let uiHeight = H / 8
         
         // position
-        imageView.center = CGPoint(x:screenWidth/2, y:screenHeight/2)
+        let upperPosition = CGRect(x:0, y:H - uiHeight, width:W, height:uiHeight)
+        let bottomPosition = CGRect(x:0, y:0, width:W, height:uiHeight)
         
-        // add
-        self.view.addSubview(imageView)
-    }
-    
-    func addButtons(){
+        let bgColor = UIColor.black
+        
+        let upperBoard = UIView(frame: upperPosition)
+        let bottomBoard = UIView(frame: bottomPosition)
+        
+        upperBoard.backgroundColor = bgColor
+        bottomBoard.backgroundColor = bgColor
+        
+        upperBoard.alpha = 0.25
+        bottomBoard.alpha = 0.25
+        
+        self.view.addSubview(upperBoard)
+        self.view.addSubview(bottomBoard)
+        
+        // add rec buttons
         myButtonStart = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 50))
         myButtonStop = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 50))
         
@@ -70,14 +79,29 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         myButtonStart.layer.cornerRadius = 20.0
         myButtonStop.layer.cornerRadius = 20.0
         
-        myButtonStart.layer.position = CGPoint(x: self.view.bounds.width/2 - 70, y:self.view.bounds.height-50)
-        myButtonStop.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height-50)
+        myButtonStart.layer.position = CGPoint(x: self.view.bounds.width/2 - 70, y:self.view.bounds.height - uiHeight / 2)
+        myButtonStop.layer.position = CGPoint(x: self.view.bounds.width/2 + 70, y:self.view.bounds.height - uiHeight / 2)
         
         myButtonStart.addTarget(self, action: #selector(ViewController.onClickStartRecording), for: .touchUpInside)
         myButtonStop.addTarget(self, action: #selector(ViewController.onClickStopRecording), for: .touchUpInside)
         
         self.view.addSubview(myButtonStart)
         self.view.addSubview(myButtonStop)
+    }
+    
+    func addArtFrame(){
+        let image:UIImage = UIImage(named:"mona_lisa_frame.png")!
+        let imageView = UIImageView(image:image)
+        
+        // size
+        let screenWidth:CGFloat = view.frame.size.width
+        let screenHeight:CGFloat = view.frame.size.height
+        
+        // position
+        imageView.center = CGPoint(x:screenWidth/2, y:screenHeight/2)
+        
+        // add
+        self.view.addSubview(imageView)
     }
     
     func onClickStartRecording(){
