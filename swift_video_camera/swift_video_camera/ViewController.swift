@@ -13,49 +13,27 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         let captureSession = AVCaptureSession()
         
-        // デバイス.
         let myDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-        //let myDevice : AVCaptureDevice!
-        
-//        let audioCaptureDevices = AVCaptureDevice.devices(withMediaType: AVMediaTypeAudio)
-//        let audioInput = try! AVCaptureDeviceInput.init(device: audioCaptureDevices?.first as! AVCaptureDevice)
-
         let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
-        //var audioInput:AVCaptureInput
         do{
             let audioInput = try AVCaptureDeviceInput(device: audioDevice) as AVCaptureInput
-            // バックライトをmyDeviceに格納.
-            //        for device in devices! {
-            //            if(device.position == AVCaptureDevicePosition.back){
-            //                myDevice = device as? AVCaptureDevice
-            //            }
-            //        }
-            
-            // バックカメラを取得.
             let videoInput = try! AVCaptureDeviceInput.init(device: myDevice)
-            
-            //let myImageOutput = AVCapturePhotoOutput()
             myVideoOutput = AVCaptureMovieFileOutput()
             
             captureSession.addInput(videoInput)
             captureSession.addInput(audioInput)
-            //captureSession.addOutput(myImageOutput)
             captureSession.addOutput(myVideoOutput)
             
-            // 画像を表示するレイヤーを生成.
-            let myVideoLayer = AVCaptureVideoPreviewLayer.init(session: captureSession)
-            myVideoLayer?.frame = self.view.bounds
-            myVideoLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
-            
-            // Viewに追加.
-            self.view.layer.addSublayer(myVideoLayer!)
-            
-            // セッション開始.
+            // video view layer
+            let videoLayer = AVCaptureVideoPreviewLayer.init(session: captureSession)
+            videoLayer?.frame = self.view.bounds
+            videoLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+            self.view.layer.addSublayer(videoLayer!)
+
             captureSession.startRunning()
             
             self.addArtFrame()
             self.addButtons()
-
         }catch{
             print(error)
         }
@@ -77,7 +55,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     func addButtons(){
-        // UIボタンを作成.
         myButtonStart = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 50))
         myButtonStop = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 50))
         
@@ -99,7 +76,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         myButtonStart.addTarget(self, action: #selector(ViewController.onClickStartRecording), for: .touchUpInside)
         myButtonStop.addTarget(self, action: #selector(ViewController.onClickStopRecording), for: .touchUpInside)
         
-        // UIボタンをViewに追加.
         self.view.addSubview(myButtonStart)
         self.view.addSubview(myButtonStop)
     }
