@@ -2,16 +2,17 @@ import UIKit
 import Photos
 import AVFoundation
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     var myVideoOutput: AVCaptureMovieFileOutput!
     var myButtonStart: UIButton!
     var myButtonStop: UIButton!
     
     override func viewDidLoad() {
+        print("初期化")
         super.viewDidLoad()
         
-        let captureSession = AVCaptureSession()
+        let videoCaptureSession = AVCaptureSession()
         
         let myDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
         let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
@@ -20,17 +21,25 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             let videoInput = try! AVCaptureDeviceInput.init(device: myDevice)
             myVideoOutput = AVCaptureMovieFileOutput()
             
-            captureSession.addInput(videoInput)
-            captureSession.addInput(audioInput)
-            captureSession.addOutput(myVideoOutput)
+            // 毎フレームで処理するための設定
+            let frameOutput = AVCaptureVideoDataOutput()
+            //let dctPixelFormatType : Dictionary = [kCVPixelBufferPixelFormatTypeKey : Int(kCVPixelFormatType_32BGRA)]
+//            frameOutput.videoSettings = dctPixelFormatType
+            frameOutput.setSampleBufferDelegate(self, queue: DispatchQueue.main)
+            frameOutput.alwaysDiscardsLateVideoFrames = true
+            // フレーム入出力
+            
+            videoCaptureSession.addInput(videoInput)
+            videoCaptureSession.addInput(audioInput)
+            videoCaptureSession.addOutput(myVideoOutput)
             
             // video view layer
-            let videoLayer = AVCaptureVideoPreviewLayer.init(session: captureSession)
+            let videoLayer = AVCaptureVideoPreviewLayer.init(session: videoCaptureSession)
             videoLayer?.frame = self.view.bounds
             videoLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
             self.view.layer.addSublayer(videoLayer!)
 
-            captureSession.startRunning()
+            videoCaptureSession.startRunning()
             
             self.addUI()
             self.addArtFrame()
@@ -67,14 +76,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         myButtonStart = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 50))
         myButtonStop = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 50))
         
-        myButtonStart.backgroundColor = UIColor.red
-        myButtonStop.backgroundColor = UIColor.gray
-        
         myButtonStart.layer.masksToBounds = true
         myButtonStop.layer.masksToBounds = true
         
-        myButtonStart.setTitle("撮影", for: .normal)
-        myButtonStop.setTitle("停止", for: .normal)
+        notRecordingView()
         
         myButtonStart.layer.cornerRadius = 20.0
         myButtonStop.layer.cornerRadius = 20.0
@@ -87,6 +92,30 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         self.view.addSubview(myButtonStart)
         self.view.addSubview(myButtonStop)
+    }
+    
+    // 録画中の表示
+    func recordingView(){
+        myButtonStart.backgroundColor = UIColor.gray
+        myButtonStop.backgroundColor = UIColor.red
+        
+        myButtonStart.setTitle("撮影", for: .normal)
+        myButtonStop.setTitle("停止", for: .normal)
+        
+        myButtonStart.isEnabled = false
+        myButtonStop.isEnabled = true
+    }
+    
+    // 撮影中以外の表示
+    func notRecordingView(){
+        myButtonStart.backgroundColor = UIColor.red
+        myButtonStop.backgroundColor = UIColor.gray
+        
+        myButtonStart.setTitle("撮影", for: .normal)
+        myButtonStop.setTitle("停止", for: .normal)
+
+        myButtonStart.isEnabled = true
+        myButtonStop.isEnabled = false
     }
     
     func addArtFrame(){
@@ -105,18 +134,19 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     func onClickStartRecording(){
-        print("撮影開始")
+        print("撮影開始 押下")
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
         let filePath = "\(documentsDirectory)/test.mp4"
         let saveURL = URL(fileURLWithPath: filePath)
-        myVideoOutput.startRecording(toOutputFileURL: saveURL,
-                                     recordingDelegate: self)
+        myVideoOutput.startRecording(toOutputFileURL: saveURL, recordingDelegate: self)
+        recordingView()
     }
     
     func onClickStopRecording(){
-        print("撮影停止")
+        print("撮影停止 押下")
         myVideoOutput.stopRecording()
+        notRecordingView()
     }
     
     override func didReceiveMemoryWarning() {
@@ -127,18 +157,27 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     // レコード開始時
     // TODO 使われるようにする
-    private func capture(_ captureOutput: AVCaptureFileOutput!,
-                         didStartRecordingToOutputFileAt fileURL: URL!,
-                         fromConnections connections: [AnyObject]!) {
-        print("レコード開始時")
+    func capture(_ captureOutput: AVCaptureFileOutput!,
+                 didStartRecordingToOutputFileAt fileURL: URL!,
+                 fromConnections connections: [AnyObject]!) {
+        print("レコード開始時 capture")
     }
-
+    
+    // 毎フレームの画像処理
+    // TODO 使われるようにする
+    func captureOutput(_ captureOutput: AVCaptureOutput!,
+                       didOutputSampleBuffer sampleBuffer: CMSampleBuffer!,
+                       from connection: AVCaptureConnection!) {
+        print("every")
+    }
+    
     // レコード終了時
+    // 呼ばれてる
     func capture(_ captureOutput: AVCaptureFileOutput!,
                  didFinishRecordingToOutputFileAt outputFileURL: URL!,
                  fromConnections connections: [Any]!,
                  error: Error!) {
-        print("レコード終了時")
+        print("レコード終了時 capture")
 
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
