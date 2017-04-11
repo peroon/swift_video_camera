@@ -2,7 +2,11 @@ import UIKit
 import Photos
 import AVFoundation
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+class ViewController:
+    UIViewController,
+    AVCaptureFileOutputRecordingDelegate,
+    AVCaptureVideoDataOutputSampleBufferDelegate
+    {
 
     var myVideoOutput: AVCaptureMovieFileOutput!
     var myButtonStart: UIButton!
@@ -156,10 +160,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, AV
     
     
     // レコード開始時
-    // TODO 使われるようにする
     func capture(_ captureOutput: AVCaptureFileOutput!,
-                 didStartRecordingToOutputFileAt fileURL: URL!,
-                 fromConnections connections: [AnyObject]!) {
+                          didStartRecordingToOutputFileAt fileURL: URL!,
+                          fromConnections connections: [Any]!){
         print("レコード開始時 capture")
     }
     
